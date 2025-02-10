@@ -21,8 +21,7 @@ export interface WordGroup {
 
 export interface Word {
   id: number;
-  kanji: string;
-  romaji: string;
+  portuguese: string;
   english: string;
   correct_count: number;
   wrong_count: number;
@@ -107,7 +106,7 @@ export interface GroupWordsResponse {
 export const fetchGroupDetails = async (
   groupId: number,
   page: number = 1,
-  sortBy: string = 'kanji',
+  sortBy: string = 'portuguese',
   order: 'asc' | 'desc' = 'asc'
 ): Promise<GroupDetails> => {
   const response = await fetch(`${API_BASE_URL}/groups/${groupId}`);
@@ -120,7 +119,7 @@ export const fetchGroupDetails = async (
 export const fetchGroupWords = async (
   groupId: number,
   page: number = 1,
-  sortBy: string = 'kanji',
+  sortBy: string = 'portuguese',
   order: 'asc' | 'desc' = 'asc'
 ): Promise<GroupWordsResponse> => {
   const response = await fetch(
@@ -135,7 +134,7 @@ export const fetchGroupWords = async (
 // Word API
 export const fetchWords = async (
   page: number = 1,
-  sortBy: string = 'kanji',
+  sortBy: string = 'portuguese',
   order: 'asc' | 'desc' = 'asc'
 ): Promise<WordsResponse> => {
   const response = await fetch(
