@@ -165,16 +165,16 @@ def load(app):
       if not correct:
         error_messages.append('correct is required')
       
-      if error_messages.length > 0:
+      if len(error_messages) > 0:
         return jsonify({'error': ' '.join(error_messages)}), 400
 
       # Verify word exists
-      cursor.execute('SELECT id FROM words WHERE id = ?', (word_id))
+      cursor.execute('SELECT id FROM words WHERE id = ?', (word_id,))
       if not cursor.fetchone():
         return jsonify({'error': 'Word not found'}), 404
 
       # Verify study session exists
-      cursor.execute('SELECT id FROM study_sessions WHERE id = ?', (id))
+      cursor.execute('SELECT id FROM study_sessions WHERE id = ?', (id,))
       if not cursor.fetchone():
         return jsonify({'error': 'Study session not found'}), 404
 
@@ -238,7 +238,7 @@ def load(app):
       if not activity_id:
         error_messages.append('activity_id is required.')
       
-      if error_messages.length > 0:
+      if len(error_messages) > 0:
         return jsonify({'error': ' '.join(error_messages)}), 400
 
       # Verify group exists

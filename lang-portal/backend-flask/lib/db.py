@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from flask import g
+from flask import g, current_app
 
 class Db:
   def __init__(self, database='words.db'):
@@ -9,12 +9,18 @@ class Db:
 
   def get(self):
     if 'db' not in g:
-      g.db = sqlite3.connect(self.database)
+      g.db = sqlite3.connect(
+        self.database,
+        detect_types=sqlite3.PARSE_DECLTYPES
+      )
       g.db.row_factory = sqlite3.Row  # Return rows as dictionaries
     return g.db
 
   def commit(self):
     self.get().commit()
+
+  def rollback(self):
+    self.get().rollback()
 
   def cursor(self):
     # Ensure the connection is valid before getting a cursor
@@ -129,6 +135,34 @@ class Db:
         cursor=cursor,
         data_json_path='seed/study_activities.json'
       )
+
+def get_db():
+    if 'db' not in g:
+        g.db = sqlite3.connect(
+            current_app.config['DATABASE'],
+            detect_types=sqlite3.PARSE_DECLTYPES
+        )
+        g.db.row_factory = sqlite3.Row
+
+    return g.db
+
+def close_db(e=None):
+    db = g.pop('db', None)
+    
+    if db is not None:
+        db.close()
+
+def init_db():
+    # Use the existing db instance instead of creating new connection
+    cursor = db.cursor()
+    
+    # Use existing SQL setup scripts
+    db.setup_tables(cursor)
+    
+    db.commit()
+
+def init_app(app):
+    app.teardown_appcontext(close_db)
 
 # Create an instance of the Db class
 db = Db()

@@ -1,10 +1,10 @@
 ## Business Requirements
 The goal is to have an AI-powered chat agent that helps students translate an English sentence
-into Portugese. 
+into Portuguese. 
 
 ## Functional Requirements
 The student must have a UI to be able to type in their English sentence. 
-The chat agent must help return a translated sentence in Portugese.
+The chat agent must help return a translated sentence in Portuguese.
 
 ## Assumptions
 We are assuming that we will be able to run Open-source LLMs at a free tier or close 

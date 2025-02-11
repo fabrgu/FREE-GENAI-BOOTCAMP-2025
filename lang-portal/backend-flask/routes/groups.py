@@ -131,7 +131,7 @@ def load(app):
         SELECT COUNT(*) 
         FROM word_groups 
         WHERE group_id = ?
-      ''', (id))
+      ''', (id,))
       total_words = cursor.fetchone()[0]
       total_pages = (total_words + words_per_page - 1) // words_per_page
 
@@ -167,12 +167,12 @@ def load(app):
           COALESCE(SUM(CASE WHEN wri.correct = 1 THEN 1 ELSE 0 END), 0) as correct_count,
           COALESCE(SUM(CASE WHEN wri.correct = 0 THEN 1 ELSE 0 END), 0) as wrong_count
         FROM words w
-        JOIN group_words gw ON gw.word_id = w.id
+        JOIN word_groups wg ON wg.word_id = w.id
         LEFT JOIN word_review_items wri ON wri.word_id = w.id
-        WHERE gw.group_id = ?
+        WHERE wg.group_id = ?
         GROUP BY w.id
         ORDER BY w.portuguese
-      ''', (id))
+      ''', (id,))
       
       words = cursor.fetchall()
 
@@ -187,6 +187,7 @@ def load(app):
       })
 
     except Exception as e:
+      print(f"Error in get_group_words_raw: {str(e)}")  # Add logging
       return jsonify({"error": str(e)}), 500
 
   @app.route('/api/groups/<int:id>/study_sessions', methods=['GET'])
